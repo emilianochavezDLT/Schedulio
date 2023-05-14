@@ -6,6 +6,7 @@ import random
 import string
 from docx import Document
 from fpdf import FPDF
+from datetime import datetime, timedelta
 
 
 ####Random Word Generator####
@@ -52,12 +53,42 @@ def generate_random_word():
 
     #This is the word that will be returned
     return random.choice(words)
+
+def generateKeyWords():
+     
+     keywords = ['Breakfast', 'Lunch', 'Dinner', 'Break']
+     return random.choice(keywords)
+
+def generateTimeSlots():
+    
+    #for testing purposes only generate the 2 time slot
+    return 2
+    
+    
+    #timeSlots = [1, 2]
+    #return random.choice(timeSlots) 
+
 ####Random Word Generator####
 
 ###Pattern Generator for times###
-def generate_Time_Pattern():
+def generate_Time_Pattern(keyword, timeInbetween):
     #This is the string that will be returned
-    randomString = ""
+    randomTime = ""
+
+
+    if keyword == "Breakfast":
+        #Generating the random hour and minute
+        randomHour = str(random.randint(2, 10))
+        randomMinute = str(random.randint(0, 59))
+        leadingZero(randomMinute)
+        
+        breakfastTime = randomHour + ":" + randomMinute + " " + "AM"
+        if timeInbetween == 2:
+             
+            
+        
+
+
 
     #Generating the random hour and minute
     randomHour = str(random.randint(1, 12))
@@ -65,19 +96,71 @@ def generate_Time_Pattern():
 
 
     #Generating a leading zero for the minute
-    #if the length of the minute is 1, then we add a leading zero
-    if len(randomMinute) == 1:
-        #Adding a leading zero
-        randomMinute = "0" + randomMinute
+    leadingZero(randomMinute)
+
 
     #Generating a random AM or PM
     randomAMPM = random.choice(["AM", "PM"])
 
-    #This is the string that will be returned
-    randomString = randomHour + ":" + randomMinute + " " + randomAMPM
-    print(randomString)
-    return randomString
+    ##This is the string that will be returned
+    randomTime = randomHour + ":" + randomMinute + " " + randomAMPM
+
+    #Next is     
+
+
+
+
+    return randomTime
     
+def leadingZero(minute):
+    #This is the string that will be returned
+    correctedTime = ""
+
+    #Generating a leading zero for the minute
+    #if the length of the minute is 1, then we add a leading zero
+    if len(minute) == 1:
+        #Adding a leading zero
+        correctedTime = "0" + minute
+
+    return correctedTime
+
+
+#These are the event time function that will determine the times of the events
+#Based on the keywords
+#hasATimeGenerated is a bool that will determine if a time has been generated
+#timeGenerated is the time that was previously generated
+def breakFast(hasATimeGenerated, timeGenerated):
+    #This is the string that will be returned
+    randomTime = ""
+
+
+    #Generating the random hour and minute
+    randomHour = str(random.randint(2, 10))
+    randomMinute = str(random.randint(0, 59))
+    leadingZero(randomMinute)
+
+
+    ##This is the string that will be returned
+    randomTime = randomHour + ":" + randomMinute + " " + "AM"
+
+    return randomTime
+
+def lunch(hasATimeGenerated, timeGenerated):
+    #This is the string that will be returned
+    randomTime = ""
+
+
+    #Generating the random hour and minute
+    randomHour = str(random.randint(10, 2))
+    randomMinute = str(random.randint(0, 59))
+    leadingZero(randomMinute)
+
+
+
+    ##This is the string that will be returned
+    randomTime = randomHour + ":" + randomMinute + " " + "PM"
+
+    return randomTime
 
 
 
@@ -99,13 +182,10 @@ def save_to_docx(content, filename):
 #Save to pdf file
 def save_to_pdf(content, filename):
 
-            width = 100
-            height = 10
-
             pdf = FPDF()
             pdf.add_page()
             pdf.set_font("Arial", size = 12)
-            pdf.cell(width, height, txt = content, ln = 1, align = 'C')
+            pdf.multi_cell(0, 10, txt = content, align = "L")
             pdf.output(filename)
 
 
@@ -135,6 +215,11 @@ def main():
     #This is the string that will hold the random words, string, and numbers
     randomWordsString = ""
 
+    #We only want to generate the keywords once
+    keywordsGererator = 0
+    keyWordGenerated = generateKeyWords()
+    timeSlotted = generateTimeSlots()
+
 
     #This is the loop that will concatenate the random words, string, and numbers
     for i in range(randomCount):
@@ -143,7 +228,12 @@ def main():
         randomWordsString += randomWords[i] + " "
         randomWordsString += randomString + " "
         randomWordsString += randomNumbers + " "
-        randomWordsString += generate_Time_Pattern() + " "
+        randomWordsString += generate_Time_Pattern(keyWordGenerated, timeSlotted) + " "
+
+        #An if statement to generate the keywords only once
+        if keywordsGererator == 0:
+            randomWordsString += generateKeyWords() + " "
+            keywordsGererator += 1
             
         
 
@@ -151,30 +241,41 @@ def main():
     #This is the string that will hold the random words, string, and numbers
     print("This is the random words String that was generated \n",randomWordsString)
 
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     #This is the name of the file that will be created
-    filename = "randomWords"
+    #filename = "randomWords"
 
     #This is the file extension that will be used
-    fileExtensionText = ".txt"
-    fileExtensionDocx = ".docx"
-    fileExtensionPdf = ".pdf"
+    #fileExtensionText = ".txt"
+    #fileExtensionDocx = ".docx"
+    #fileExtensionPdf = ".pdf"
 
     #This is the file name that will be used for the text file
-    filenameText = filename + fileExtensionText
-    filenameDocx = filename + fileExtensionDocx
-    filenamePdf = filename + fileExtensionPdf
-     
+    #filenameText = filename + fileExtensionText
+    #filenameDocx = filename + fileExtensionDocx
+    #filenamePdf = filename + fileExtensionPdf
+    # 
     #This is the content that will be saved to the file
-    content = randomWordsString
+    #content = randomWordsString
+
 
     #This is the function that will save the content to the file
-    save_to_text(content, filenameText)
+    #save_to_text(content, filenameText)
 
-    #This is the function that will save the content to the file
-    save_to_docx(content, filenameDocx)
+    ##This is the function that will save the content to the file
+    #save_to_docx(content, filenameDocx)
 
-    #This is the function that will save the content to the file
-    save_to_pdf(content, filenamePdf)     
+    ##This is the function that will save the content to the file
+    #save_to_pdf(content, filenamePdf)     
     
 
 if __name__ == "__main__":
