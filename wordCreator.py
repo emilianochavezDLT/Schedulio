@@ -8,7 +8,6 @@ from docx import Document
 from fpdf import FPDF
 from datetime import datetime, timedelta
 
-
 ####Random Word Generator####
 
 #This function will generate a random string of characters
@@ -70,43 +69,39 @@ def generateTimeSlots():
 
 ####Random Word Generator####
 
+
+#This the extreme case function that will indicate 
+#if a time that is being added is going over the extreme case
+#Example: For breakfastes the latest time is 10:00 AM
+#If the time is 10:30 AM then it will be changed to 10:00 AM
+#This done for all the events
+def extremeCase(currentTime , extremeCaseTime):
+    
+    #This is the string that will be returned
+    correctedTime = ""
+
+    #Converting the time to a time object
+    time_obj = datetime.strptime(currentTime, '%I:%M %p').time()
+    #Converting the extreme case time to a time object
+    extremeCase_obj = datetime.strptime(extremeCaseTime, '%I:%M %p').time()
+
+    #Checking if the time is greater than the extreme case time
+    if time_obj > extremeCase_obj:
+        #Converting the time back to a string
+        correctedTime = time_obj.strftime('%I:%M %p')
+    else:
+        #Converting the extreme case time back to a string
+        correctedTime = extremeCase_obj.strftime('%I:%M %p')
+
+    return correctedTime
+
+
+
+
 ###Pattern Generator for times###
 def generate_Time_Pattern(keyword, timeInbetween):
     #This is the string that will be returned
     randomTime = ""
-
-
-    if keyword == "Breakfast":
-        #Generating the random hour and minute
-        randomHour = str(random.randint(2, 10))
-        randomMinute = str(random.randint(0, 59))
-        leadingZero(randomMinute)
-        
-        breakfastTime = randomHour + ":" + randomMinute + " " + "AM"
-        if timeInbetween == 2:
-             
-            
-        
-
-
-
-    #Generating the random hour and minute
-    randomHour = str(random.randint(1, 12))
-    randomMinute = str(random.randint(0, 59))
-
-
-    #Generating a leading zero for the minute
-    leadingZero(randomMinute)
-
-
-    #Generating a random AM or PM
-    randomAMPM = random.choice(["AM", "PM"])
-
-    ##This is the string that will be returned
-    randomTime = randomHour + ":" + randomMinute + " " + randomAMPM
-
-    #Next is     
-
 
 
 
@@ -133,15 +128,41 @@ def breakFast(hasATimeGenerated, timeGenerated):
     #This is the string that will be returned
     randomTime = ""
 
+    #Checking if a time has been generated
+    if hasATimeGenerated == True:
+        #Converting the time to a time object
+        time_obj = datetime.strptime(timeGenerated, '%I:%M %p').time()
+        #Creating a random number generater. If the time is even then we add 30 minutes
+        #If the time is odd then we add 1hour
+        randomNum = random.randint(0, 1)
+        
+        #We are going to add another if statment saying if the time
+        # equals to 3:30pm then that will the latest time it can be 
+        # and if it is 3:30pm then we will not add any more time to it
+        
+        if randomNum == 0:
+            #Adding 30 minutes to the time object
+            time_obj += timedelta(minutes=30)
+            time_obj = extremeCase(time_obj.strftime('%I:%M %p'), "10:00 AM")
+        else:
+            #Adding 1 hour to the time object
+            time_obj += timedelta(hours=1)
+            time_obj = extremeCase(time_obj.strftime('%I:%M %p'), "10:00 AM")
+        
+        #Converting the time back to a string
+        randomTime = time_obj.strftime('%I:%M %p')
 
-    #Generating the random hour and minute
-    randomHour = str(random.randint(2, 10))
-    randomMinute = str(random.randint(0, 59))
-    leadingZero(randomMinute)
+
+    else:
+        #Generating the random hour and minute
+        randomHour = str(random.randint(2, 10))
+        randomMinute = str(random.randint(0, 59))
+        #Generating a leading zero for the minute
+        randomMinute = leadingZero(randomMinute)
 
 
-    ##This is the string that will be returned
-    randomTime = randomHour + ":" + randomMinute + " " + "AM"
+        ##This is the string that will be returned
+        randomTime = randomHour + ":" + randomMinute + " " + "AM"
 
     return randomTime
 
@@ -149,16 +170,118 @@ def lunch(hasATimeGenerated, timeGenerated):
     #This is the string that will be returned
     randomTime = ""
 
+    #Checking if a time has been generated
+    if hasATimeGenerated == True:
+        #Converting the time to a time object
+        time_obj = datetime.strptime(timeGenerated, '%I:%M %p').time()
+        #Creating a random number generater. If the time is even then we add 30 minutes
+        #If the time is odd then we add 1hour
+        randomNum = random.randint(0, 1)
+        
+        #We are going to add another if statment saying if the time
+        # equals to 3:30pm then that will the latest time it can be 
+        # and if it is 3:30pm then we will not add any more time to it
+        
+        if randomNum == 0:
+            #Adding 30 minutes to the time object
+            time_obj += timedelta(minutes=30)
+            time_obj = extremeCase(time_obj.strftime('%I:%M %p'), "3:30 PM")
+        else:
+            #Adding 1 hour to the time object
+            time_obj += timedelta(hours=1)
+            time_obj = extremeCase(time_obj.strftime('%I:%M %p'), "3:30 PM")
+        
+        am_pm = "AM"
+        #Checking if the hour is greater than 12
+        if time_obj.hour > 12:
+            #Subtracting 12 from the hour
+            time_obj.hour -= 12
+            #Setting the am/pm to pm
+            am_pm = "PM"
+        
 
-    #Generating the random hour and minute
-    randomHour = str(random.randint(10, 2))
-    randomMinute = str(random.randint(0, 59))
-    leadingZero(randomMinute)
+        #Converting the time object back to a string
+        randomTime = time_obj.strftime('%I:%M ') + am_pm
+    
+    #If a time has not been generated then we generate a random time
+    else:
+        #Generating the random hour and minute
+        randomHour = str(random.randint(10, 2))
+        randomMinute = str(random.randint(0, 59))
+        randomMinute = leadingZero(randomMinute)
 
-
+        if randomHour == '10' or randomHour =='11':
+             randomHour = randomHour + ":" + randomMinute + " " + "AM"
+        else:
+             randomHour = randomHour + ":" + randomMinute + " " + "PM"
 
     ##This is the string that will be returned
-    randomTime = randomHour + ":" + randomMinute + " " + "PM"
+    return randomTime
+
+def dinner(hasATimeGenerated, timeGenerated):
+    #This is the string that will be returned
+    randomTime = ""
+
+
+
+    if hasATimeGenerated == True:
+        #Converting the time to a time object
+        time_obj = datetime.strptime(timeGenerated, '%I:%M %p').time()
+        #Creating a random number generater. If the time is even then we add 30 minutes
+        #If the time is odd then we add 1hour
+        randomNum = random.randint(0, 1)
+        
+        #We are going to add another if statment saying if the time
+        # equals to 3:30pm then that will the latest time it can be 
+        # and if it is 3:30pm then we will not add any more time to it
+        
+        if randomNum == 0:
+            #Adding 30 minutes to the time object
+            time_obj += timedelta(minutes=30)
+            #Converting the time object back to a string, but it will return
+            #The correct time if the time is greater than 3:30pm
+            time_obj = extremeCase(time_obj.strftime('%I:%M %p'), "3:00 AM")
+        else:
+            #Adding 1 hour to the time object
+            time_obj += timedelta(hours=1)
+            time_obj = extremeCase(time_obj.strftime('%I:%M %p'), "3:00 AM")
+        
+        am_pm = "AM"
+        #Checking if the hour is greater than 12
+        if time_obj.hour > 12:
+            #Subtracting 12 from the hour
+            time_obj.hour -= 12
+            #Setting the am/pm to pm
+            am_pm = "PM"
+        
+
+        #Converting the time object back to a string
+        randomTime = time_obj.strftime('%I:%M ') + am_pm
+
+    else:
+        #we are going to assume that hour is 4 
+        #We do not want the hour to be 4 if it is then we will generate a new time
+        wasFourGenerated = True
+        while wasFourGenerated:
+            #Generating the random hour and minute
+            randomHour = str(random.randint(1, 12))
+            #If the hour is not 4 then we stop the loop
+            if randomHour != '4' and randomHour != '04':
+                wasFourGenerated = False
+            randomMinute = leadingZero(str(random.randint(0, 59)))
+
+
+        #If the hour equals 12, 1, 2, or 3 then we add AM
+        #using 'in' creates a tuple and we are checking if the hour is in the tuple
+        #this does a linear search. It will go to 12, 1, 2, 3 and evualte them 
+        # until one of them is true. If all of them are false 
+        #it will go to our else statement
+        if randomHour in ('12', '1', '2', '3'):
+            randomTime = randomHour + ":" + randomMinute + " " + "AM"
+
+        #If the hour does not equal 12, 1, 2, or 3 then we add PM
+        else:
+            randomTime = randomHour + ":" + randomMinute + " " + "PM"
 
     return randomTime
 
