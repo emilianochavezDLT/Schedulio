@@ -53,11 +53,13 @@ def generate_random_word():
     #This is the word that will be returned
     return random.choice(words)
 
+#This is the function that will generate a random keyword
 def generateKeyWords():
      
      keywords = ['Breakfast', 'Lunch', 'Dinner', 'Break']
      return random.choice(keywords)
 
+#This is the function that will generate random time slots
 def generateTimeSlots():
     
     #for testing purposes only generate the 2 time slot
@@ -106,7 +108,8 @@ def generate_Time_Pattern(keyword, timeInbetween):
 
 
     return randomTime
-    
+
+#This is the function that will add a leading zero to the minute
 def leadingZero(minute):
     #This is the string that will be returned
     correctedTime = ""
@@ -328,7 +331,8 @@ def main():
     for i in range(randomCount):
         randomWords.append(generate_random_word())
     
-    #This is generating the random string which will give us randome characters, letters, and special characters
+    #This is generating the random string which will give us random 
+    #characters, letters, and special characters
     randomString = generate_random_string(randomCount)
 
     #This is generating the random numbers
@@ -363,17 +367,7 @@ def main():
 
     #This is the string that will hold the random words, string, and numbers
     print("This is the random words String that was generated \n",randomWordsString)
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+        
     #This is the name of the file that will be created
     #filename = "randomWords"
 
