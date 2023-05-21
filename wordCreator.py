@@ -1,14 +1,12 @@
 #This is word creater that will create a doc, pdf and text file
 #It is a program that will randomly generate words, special characters, and numbers
-
-#importing the libraries
 import random
 import string
 from docx import Document
 from fpdf import FPDF
 from datetime import datetime, timedelta
 
-####Random Word Generator####
+# Random Word Generator #
 
 #This function will generate a random string of characters
 def generate_random_string(length):
@@ -54,13 +52,13 @@ def generate_random_word():
     return random.choice(words)
 
 #This is the function that will generate a random keyword
-def generateKeyWords():
+def generate_Key_Words():
      
      keywords = ['Breakfast', 'Lunch', 'Dinner', 'Break']
      return random.choice(keywords)
 
 #This is the function that will generate random time slots
-def generateTimeSlots():
+def generate_Time_Slots():
     
     #for testing purposes only generate the 2 time slot
     return 2
@@ -69,7 +67,7 @@ def generateTimeSlots():
     #timeSlots = [1, 2]
     #return random.choice(timeSlots) 
 
-####Random Word Generator####
+#   Random Word Generator   #
 
 
 #This the extreme case function that will indicate 
@@ -77,7 +75,7 @@ def generateTimeSlots():
 #Example: For breakfastes the latest time is 10:00 AM
 #If the time is 10:30 AM then it will be changed to 10:00 AM
 #This done for all the events
-def extremeCase(currentTime , extremeCaseTime):
+def extreme_Case(currentTime , extreme_CaseTime):
     
     #This is the string that will be returned
     correctedTime = ""
@@ -85,22 +83,22 @@ def extremeCase(currentTime , extremeCaseTime):
     #Converting the time to a time object
     time_obj = datetime.strptime(currentTime, '%I:%M %p').time()
     #Converting the extreme case time to a time object
-    extremeCase_obj = datetime.strptime(extremeCaseTime, '%I:%M %p').time()
+    extreme_Case_obj = datetime.strptime(extreme_CaseTime, '%I:%M %p').time()
 
     #Checking if the time is greater than the extreme case time
-    if time_obj > extremeCase_obj:
+    if time_obj > extreme_Case_obj:
         #Converting the time back to a string
         correctedTime = time_obj.strftime('%I:%M %p')
     else:
         #Converting the extreme case time back to a string
-        correctedTime = extremeCase_obj.strftime('%I:%M %p')
+        correctedTime = extreme_Case_obj.strftime('%I:%M %p')
 
     return correctedTime
 
 
 
 
-###Pattern Generator for times###
+# Pattern Generator for times #
 def generate_Time_Pattern(keyword, timeInbetween):
     #This is the string that will be returned
     randomTime = ""
@@ -110,7 +108,7 @@ def generate_Time_Pattern(keyword, timeInbetween):
     return randomTime
 
 #This is the function that will add a leading zero to the minute
-def leadingZero(minute):
+def leading_Zero(minute):
     #This is the string that will be returned
     correctedTime = ""
 
@@ -146,11 +144,11 @@ def breakFast(hasATimeGenerated, timeGenerated):
         if randomNum == 0:
             #Adding 30 minutes to the time object
             time_obj += timedelta(minutes=30)
-            time_obj = extremeCase(time_obj.strftime('%I:%M %p'), "10:00 AM")
+            time_obj = extreme_Case(time_obj.strftime('%I:%M %p'), "10:00 AM")
         else:
             #Adding 1 hour to the time object
             time_obj += timedelta(hours=1)
-            time_obj = extremeCase(time_obj.strftime('%I:%M %p'), "10:00 AM")
+            time_obj = extreme_Case(time_obj.strftime('%I:%M %p'), "10:00 AM")
         
         #Converting the time back to a string
         randomTime = time_obj.strftime('%I:%M %p')
@@ -161,8 +159,8 @@ def breakFast(hasATimeGenerated, timeGenerated):
         randomHour = str(random.randint(2, 10))
         randomMinute = str(random.randint(0, 59))
         #Generating a leading zero for the minute
-        randomMinute = leadingZero(randomMinute)
-
+        randomMinute = leading_Zero(randomMinute)
+        
 
         ##This is the string that will be returned
         randomTime = randomHour + ":" + randomMinute + " " + "AM"
@@ -188,11 +186,11 @@ def lunch(hasATimeGenerated, timeGenerated):
         if randomNum == 0:
             #Adding 30 minutes to the time object
             time_obj += timedelta(minutes=30)
-            time_obj = extremeCase(time_obj.strftime('%I:%M %p'), "3:30 PM")
+            time_obj = extreme_Case(time_obj.strftime('%I:%M %p'), "3:30 PM")
         else:
             #Adding 1 hour to the time object
             time_obj += timedelta(hours=1)
-            time_obj = extremeCase(time_obj.strftime('%I:%M %p'), "3:30 PM")
+            time_obj = extreme_Case(time_obj.strftime('%I:%M %p'), "3:30 PM")
         
         am_pm = "AM"
         #Checking if the hour is greater than 12
@@ -211,7 +209,7 @@ def lunch(hasATimeGenerated, timeGenerated):
         #Generating the random hour and minute
         randomHour = str(random.randint(10, 2))
         randomMinute = str(random.randint(0, 59))
-        randomMinute = leadingZero(randomMinute)
+        randomMinute = leading_Zero(randomMinute)
 
         if randomHour == '10' or randomHour =='11':
              randomHour = randomHour + ":" + randomMinute + " " + "AM"
@@ -243,11 +241,11 @@ def dinner(hasATimeGenerated, timeGenerated):
             time_obj += timedelta(minutes=30)
             #Converting the time object back to a string, but it will return
             #The correct time if the time is greater than 3:30pm
-            time_obj = extremeCase(time_obj.strftime('%I:%M %p'), "3:00 AM")
+            time_obj = extreme_Case(time_obj.strftime('%I:%M %p'), "3:00 AM")
         else:
             #Adding 1 hour to the time object
             time_obj += timedelta(hours=1)
-            time_obj = extremeCase(time_obj.strftime('%I:%M %p'), "3:00 AM")
+            time_obj = extreme_Case(time_obj.strftime('%I:%M %p'), "3:00 AM")
         
         am_pm = "AM"
         #Checking if the hour is greater than 12
@@ -271,7 +269,7 @@ def dinner(hasATimeGenerated, timeGenerated):
             #If the hour is not 4 then we stop the loop
             if randomHour != '4' and randomHour != '04':
                 wasFourGenerated = False
-            randomMinute = leadingZero(str(random.randint(0, 59)))
+            randomMinute = leading_Zero(str(random.randint(0, 59)))
 
 
         #If the hour equals 12, 1, 2, or 3 then we add AM
@@ -344,8 +342,8 @@ def main():
 
     #We only want to generate the keywords once
     keywordsGererator = 0
-    keyWordGenerated = generateKeyWords()
-    timeSlotted = generateTimeSlots()
+    keyWordGenerated = generate_Key_Words()
+    timeSlotted = generate_Time_Slots()
 
 
     #This is the loop that will concatenate the random words, string, and numbers
@@ -359,7 +357,7 @@ def main():
 
         #An if statement to generate the keywords only once
         if keywordsGererator == 0:
-            randomWordsString += generateKeyWords() + " "
+            randomWordsString += generate_Key_Words() + " "
             keywordsGererator += 1
             
         
