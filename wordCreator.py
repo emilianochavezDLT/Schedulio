@@ -54,9 +54,9 @@ def generate_random_word():
 #This is the function that will generate a random keyword
 def generate_Key_Words():
      
-    #keywords = ['Breakfast', 'Lunch', 'Dinner', 'Break']
-    #return random.choice(keywords)
-    return "Break"
+    keywords = ['Breakfast', 'Lunch', 'Dinner', 'Break']
+    return random.choice(keywords)
+    #return "Break"
 
 #This is the function that will generate random time slots
 def generate_Time_Intervals():
@@ -447,9 +447,19 @@ def main():
     for i in range(timeIntervals):
             timesGenerated.append(generate_Time_Pattern(keyWordGenerated, prevoiusTimeGenerated))
             prevoiusTimeGenerated = timesGenerated[i]
-        
+    
+    turns_in_loop = 1
     for i in range(len(timesGenerated)):
-        randomWordsString += timesGenerated[i] + " - " 
+        if turns_in_loop % 2 == 0:
+            randomWordsString += "- "
+        randomWordsString += timesGenerated[i] + " "
+        turns_in_loop += 1
+
+
+    #We are going to divide the files into its keywords 
+
+
+
             
     randomWordsString += keyWordGenerated + " "
 
