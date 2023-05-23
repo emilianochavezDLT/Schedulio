@@ -56,17 +56,13 @@ def generate_Key_Words():
      
     #keywords = ['Breakfast', 'Lunch', 'Dinner', 'Break']
     #return random.choice(keywords)
-    return "Breakfast"
+    return "Break"
 
 #This is the function that will generate random time slots
 def generate_Time_Intervals():
     
-    #for testing purposes only generate the 2 time slot
-    return 2
-    
-    
-    #timeSlots = [1, 2]
-    #return random.choice(timeSlots) 
+    timeSlots = [1, 2]
+    return random.choice(timeSlots) 
 
 #   Random Word Generator   #
 
@@ -99,7 +95,8 @@ def extreme_Case(currentTime, extreme_CaseTime):
     else:
         # Converting the time back to a string
         correctedTime = time_obj.strftime('%#I:%M %p')
-        
+    
+
     return correctedTime
 
 
@@ -190,7 +187,7 @@ def breakfast(hasATimeGenerated, timeGenerated):
 
     else:
         #Generating the random hour and minute
-        randomHour = str(random.randint(2, 10))
+        randomHour = str(random.randint(2, 9))
         randomMinute = str(random.randint(0, 59))
         #Generating a leading zero for the minute
         randomMinute = leading_Zero(randomMinute)
@@ -226,10 +223,12 @@ def lunch(hasATimeGenerated, timeGenerated):
             time_obj = datetime.strptime(extreme_Case(time_obj.strftime('%#I:%M %p'), "3:00 PM"), '%I:%M %p')
         
         am_pm = "AM"
+
+        
         #Checking if the hour is greater than 12
-        if time_obj.hour > 12:
+        if time_obj.hour >= 12:
             #Subtracting 12 from the hour
-            time_obj.hour -= 12
+            time_obj = time_obj.replace(hour=time_obj.hour - 12)
             #Setting the am/pm to pm
             am_pm = "PM"
         
@@ -240,15 +239,16 @@ def lunch(hasATimeGenerated, timeGenerated):
     #If a time has not been generated then we generate a random time
     else:
         #Generating the random hour and minute
-        randomHour = random.randint(10, 14)
+        randomHour = random.randint(10, 12)
         randomHour = str(randomHour if randomHour <= 12 else randomHour - 12)
         randomMinute = str(random.randint(0, 59))
         randomMinute = leading_Zero(randomMinute)
-
-        if randomHour < '12':
-            randomHour = randomHour + ":" + randomMinute + " " + "AM"
+        
+        #The if condition is wrong here
+        if randomHour in ('10', '11'):
+            randomTime = randomHour + ":" + randomMinute + " " + "AM"
         else:
-            randomHour = randomHour + ":" + randomMinute + " " + "PM"
+            randomTime = randomHour + ":" + randomMinute + " " + "PM"
 
     ##This is the string that will be returned
     return randomTime
@@ -310,7 +310,7 @@ def dinner(hasATimeGenerated, timeGenerated):
 
     return randomTime
 
-
+##Fix this thing here
 def break_Time(has_A_Time_Been_Generated, time_Generated):
     #This is the string that will be returned
     randomTime = ""
@@ -330,17 +330,17 @@ def break_Time(has_A_Time_Been_Generated, time_Generated):
         if randomNum == 0:
             #Adding 30 minutes to the time object
             time_obj += timedelta(minutes=30)
-            time_obj = datetime.strptime(extreme_Case(time_obj.strftime('%#I:%M %p'), "5:00 PM"), '%I:%M %p')
+            time_obj = datetime.strptime(extreme_Case(time_obj.strftime('%#I:%M %p'), "7:00 PM"), '%I:%M %p')
         else:
             #Adding 1 hour to the time object
             time_obj += timedelta(hours=1)
-            time_obj = datetime.strptime(extreme_Case(time_obj.strftime('%#I:%M %p'), "5:00 PM"), '%I:%M %p')
+            time_obj = datetime.strptime(extreme_Case(time_obj.strftime('%#I:%M %p'), "7:00 PM"), '%I:%M %p')
         
         am_pm = "AM"
-        #Checking if the hour is greater than 12
-        if time_obj.hour > 12:
+         #Checking if the hour is greater than 12
+        if time_obj.hour >= 12:
             #Subtracting 12 from the hour
-            time_obj.hour -= 12
+            time_obj = time_obj.replace(hour=time_obj.hour - 12)
             #Setting the am/pm to pm
             am_pm = "PM"
         
@@ -351,14 +351,18 @@ def break_Time(has_A_Time_Been_Generated, time_Generated):
     #If a time has not been generated then we generate a random time
     else:
         #Generating the random hour and minute
-        randomHour = str(random.randint(4, 14) if int(randomHour) <= 12 else int(randomHour) - 12)
+        randomHour = random.randint(4, 16)
+        #Grabbing the hour before it gets converted to a string
+        hourGrab = randomHour
+        randomHour = str(randomHour if randomHour <= 12 else randomHour - 12)
         randomMinute = str(random.randint(0, 59))
         randomMinute = leading_Zero(randomMinute)
 
-        if randomHour < '12':
-            randomHour = randomHour + ":" + randomMinute + " " + "AM"
+        #The if condition is wrong here
+        if hourGrab <= 12:
+            randomTime = randomHour + ":" + randomMinute + " " + "AM"
         else:
-            randomHour = randomHour + ":" + randomMinute + " " + "PM"
+            randomTime = randomHour + ":" + randomMinute + " " + "PM"
     ##This is the string that will be returned
     return randomTime
 
@@ -420,7 +424,7 @@ def main():
     #We only want to generate the keywords once
     keywordsGererator = 0
     keyWordGenerated = generate_Key_Words()
-    timeIntervals = generate_Time_Intervals() 
+    timeIntervals = generate_Time_Intervals() * 2 
 
     #This is going to be an an array to hold the times that were generated
     timesGenerated = []
