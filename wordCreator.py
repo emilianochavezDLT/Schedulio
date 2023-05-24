@@ -11,7 +11,7 @@ from datetime import datetime, timedelta
 #This function will generate a random string of characters
 def generate_random_string(length):
     #This is the string that will be returned
-    randomString = ""
+    character_String = ""
 
     #This is the list of characters that will be used to generate the string, 
     #which includes letters, numbers, and special characters
@@ -19,10 +19,10 @@ def generate_random_string(length):
 
     #This is the loop that will generate the string
     for i in range(length):
-        randomString += random.choice(characters)
+        character_String += random.choice(characters)
     
     #This is the string that will be returned
-    return randomString
+    return character_String
 
 #This is the function that will generate a random word from the list
 def generate_random_word():
@@ -51,12 +51,6 @@ def generate_random_word():
     #This is the word that will be returned
     return random.choice(words)
 
-#This is the function that will generate a random keyword
-def generate_Key_Words():
-     
-    keywords = ['Breakfast', 'Lunch', 'Dinner', 'Break']
-    return random.choice(keywords)
-    #return "Break"
 
 #This is the function that will generate random time slots
 def generate_Time_Intervals():
@@ -197,6 +191,7 @@ def breakfast(hasATimeGenerated, timeGenerated):
 
     return randomTime
 
+#Creating time for lunch
 def lunch(hasATimeGenerated, timeGenerated):
     #This is the string that will be returned
     randomTime = ""
@@ -253,6 +248,7 @@ def lunch(hasATimeGenerated, timeGenerated):
     ##This is the string that will be returned
     return randomTime
 
+#Creating time for dinner
 def dinner(hasATimeGenerated, timeGenerated):
     # This is the string that will be returned
     randomTime = ""
@@ -310,7 +306,7 @@ def dinner(hasATimeGenerated, timeGenerated):
 
     return randomTime
 
-##Fix this thing here
+#Creating times for breaks
 def break_Time(has_A_Time_Been_Generated, time_Generated):
     #This is the string that will be returned
     randomTime = ""
@@ -396,102 +392,117 @@ def save_to_pdf(content, filename):
 
 ##################################
 
-#This is the main function of the program
-def main():
+def file_Content_Generator(keyword, output_Length):
+   
 
-    #Changing the length of the random string
-    randomCount = 10
-
-    #The array that will hold the random words
-    randomWords = []
-
-    
+    #This is the array that will hold the random words
+    random_Words_Arr = []
     #We need to generate at least 10 random words and put them into an array
-    for i in range(randomCount):
-        randomWords.append(generate_random_word())
-    
+    for i in range(output_Length):
+        random_Words_Arr.append(generate_random_word())
+
     #This is generating the random string which will give us random 
     #characters, letters, and special characters
-    randomString = generate_random_string(randomCount)
-
+    character_String = generate_random_string(output_Length)
+    
     #This is generating the random numbers
-    randomNumbers = str(random.randint(0, 100))
+    random_Nums = str(random.randint(0, 100))
     
     #Now we have to cocatenate the random words, string, and numbers
     #This is the string that will hold the random words, string, and numbers
-    randomWordsString = ""
-
-    #We only want to generate the keywords once
-    keywordsGererator = 0
-    keyWordGenerated = generate_Key_Words()
+    file_Output = ""
+    
+    #This is the number of time intervals that will be generated
     timeIntervals = generate_Time_Intervals() * 2 
-
+    
     #This is going to be an an array to hold the times that were generated
     timesGenerated = []
-
+    
     #This is the loop that will concatenate the random words, string, and numbers
-    for i in range(randomCount):
-
+    for i in range(output_Length):
         #Random words are being concatenated and a space is being added
-        randomWordsString += randomWords[i] + " "
-        randomWordsString += randomString + " "
-        randomWordsString += randomNumbers + " "
-
-        #An if statement to generate the keywords only once
-        if keywordsGererator == 0:
-            randomWordsString += generate_Key_Words() + " "
-            keywordsGererator += 1
-
-    #This is the time that was previously generated
+        file_Output += random_Words_Arr[i] + " "
+        file_Output += character_String + " "
+        file_Output += random_Nums + " "
+    
+    #Prevoius time generated is an empty string to start off the loop
     prevoiusTimeGenerated = ""
     for i in range(timeIntervals):
-            timesGenerated.append(generate_Time_Pattern(keyWordGenerated, prevoiusTimeGenerated))
+            timesGenerated.append(generate_Time_Pattern(keyword, prevoiusTimeGenerated))
             prevoiusTimeGenerated = timesGenerated[i]
     
+    #This is the loop that will concatenate the times that were generated
+    #This loop is used to fix the dash issure that was happening
+    #It will generate times like this: 10:00 AM - 11:00 AM  12:00 PM - 1:00 PM
     turns_in_loop = 1
     for i in range(len(timesGenerated)):
         if turns_in_loop % 2 == 0:
-            randomWordsString += "- "
-        randomWordsString += timesGenerated[i] + " "
+            file_Output += "- "
+        file_Output += timesGenerated[i] + " "
         turns_in_loop += 1
-
-
-    #We are going to divide the files into its keywords 
-
-
-
-            
-    randomWordsString += keyWordGenerated + " "
-
-
+    file_Output += keyword + " "
+    
     #This is the string that will hold the random words, string, and numbers
-    print("This is the random words String that was generated \n",randomWordsString)
-        
+    print("This is the random words String that was generated \n",file_Output)
+    
+    return file_Output
+
+
+def file_Generator(keyword, number_Of_File, content):
+    
     #This is the name of the file that will be created
-    #filename = "randomWords"
+    filename = keyword + str(number_Of_File)
+    print("This is the file name that was generated \n", filename)
 
     #This is the file extension that will be used
-    #fileExtensionText = ".txt"
-    #fileExtensionDocx = ".docx"
-    #fileExtensionPdf = ".pdf"
+    fileExtensionText = ".txt"
+    fileExtensionDocx = ".docx"
+    fileExtensionPdf = ".pdf"
 
     #This is the file name that will be used for the text file
-    #filenameText = filename + fileExtensionText
-    #filenameDocx = filename + fileExtensionDocx
-    #filenamePdf = filename + fileExtensionPdf
-    # 
+    filenameText = filename + fileExtensionText
+    filenameDocx = filename + fileExtensionDocx
+    filenamePdf = filename + fileExtensionPdf
+     
     #This is the content that will be saved to the file
-    #content = randomWordsString
-
-
     #This is the function that will save the content to the file
-    #save_to_text(content, filenameText)
+    save_to_text(content, filenameText)
 
     ##This is the function that will save the content to the file
-    #save_to_docx(content, filenameDocx)
-
+    save_to_docx(content, filenameDocx)
+    
     ##This is the function that will save the content to the file
-    #save_to_pdf(content, filenamePdf)     
+    save_to_pdf(content, filenamePdf)     
+
+
+#This is the main function of the program
+def main():
+
+    keywords = ['Breakfast', 'Lunch', 'Dinner', 'Break']
+    
+    #This is the number of files that will be generated
+    num_of_Files = 10
+
+    #This is the length of the output
+    output_Length = 10
+
+   #Creating a for loop to generate the content for the files and to generate the files
+    for i in range(num_of_Files):
+
+        #Creating a loop to generate the content for the files
+        for j in range(len(keywords)):
+
+            #This is the content that will be saved to the file
+            file_Content = file_Content_Generator(keywords[j], output_Length)
+            
+            #This is the function that will generate the files
+            file_Generator(keywords[j], i, file_Content)
+
+            #This is the string that will hold the random words, string, and numbers
+            print("This is the file content that was generated \n", file_Content)
+
+           
+
     
 
 if __name__ == "__main__":
