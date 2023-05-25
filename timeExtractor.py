@@ -22,7 +22,7 @@ def extract_time_ranges(text):
     return sorted_time_ranges
 
 # Example usage
-text = "The event will take place from 10:00 AM - 1:30 PM. Please arrive on time. The second event is scheduled from 2:00 PM - 4:00 PM."
+text = "The event will take place from 2:00 PM - 4:00 PM. Please arrive on time. The second event is scheduled from 10:00 AM - 1:30 PM."
 time_ranges = extract_time_ranges(text)
 
 # Print sorted time ranges
