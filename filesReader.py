@@ -25,7 +25,6 @@ def read_pdf(file_path):
             text = ""
             for page in pdf_reader.pages:
                 text += page.extract_text()
-            print(text)
             return text
     except FileNotFoundError:
         print(f"File not found: {file_path}")
@@ -37,7 +36,6 @@ def read_docx(file_path):
         text = ""
         for paragraph in doc.paragraphs:
             text += paragraph.text + "\n"
-        print(text)
         return text
     except FileNotFoundError:
         print(f"File not found: {file_path}")

@@ -22,9 +22,11 @@ def extract_time_ranges(text):
     return sorted_time_ranges
 
 # Example usage
-text = "The event will take place from 2:00 PM - 4:00 PM. Please arrive on time. The second event is scheduled from 10:00 AM - 1:30 PM."
+text = "The event will take place from 2:00 PM - 4:00 PM. Please arrive on time. The second event is scheduled from 10:00 AM - 10:00 AM."
 time_ranges = extract_time_ranges(text)
 
-# Print sorted time ranges
+# Print sorted time ranges but ignore the error times.
 for time_range in time_ranges:
-    print(time_range)
+    start_time, end_time = time_range.split(' - ')
+    if start_time != end_time:
+        print(time_range)
