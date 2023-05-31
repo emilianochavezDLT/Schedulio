@@ -6,56 +6,77 @@ import timeExtractor
 
 
 #This class is used to store the content and it is also the parent class of the time class
-class FileContent:
+class File_Content:
 
     def __init__(self, content):
+
+    #       Attributes              #
         self.content = content
-        self.timeIntervals = []
-        self.indivdualTimes = []
+        self.time_Intervals = []
+        self.individual_Times = []
         self.keyword = ""
         self.keywords = []
 
     #           Setters             #
     #This is our setter function for setting the content of the file
-    def setContent(self, content):
+    def set_Content(self, content):
         self.content = content
 
-    #This is our setter function for setting the keyword of the file
-    def setKeyword(self, keyword):
-        self.keyword = keyword
-
-    #This function is used to add a time interval to the timeIntervals list
-    def addTimeInterval(self, timeInterval):
-        
-
-        self.timeIntervals.append(timeInterval)
-    
-    #This function is used to add a keyword to the keywords list
-    #This is a just incase function if mulitple keywords pop up
-    def addKeywords(self, keyword):
-        self.keywords.append(keyword)
-
-    #####
-    #####
-    #This function is used to add a time to the indivdualTimes list from a time interval
-    def addIndivdualTime(self, timeInterval):
-        time = ""
-        #Add some logic here to get an induvdual time from a time interval
-        self.indivdualTimes.append(time)
-
     #           Getters             #
+    # The Getters will have logic tied to them and assigined to 
+    # the appropiate attributes. 
+
     #This is our getter function for the content of the file
-    def getContent(self):
+    def get_Content(self):
+
+        #Returns the content in its string form
         return self.content
     
-    #This is our getter function for the timeIntervals list
-    def getTimeIntervals(self):
-        return self.timeIntervals
+    #This is our getter function for the time_Intervals list
+    def get_Time_Intervals(self):
 
-    def getKeyword(self):
+        #Calling the time extractor to get the time intervals
+        times_found = timeExtractor.extract_time_ranges(self.content)
+        
+        # A for loop needed to go through the list
+        for time_Intervals_Found in times_found:
+            
+            # Append those times into the array
+            self.time_Intervals.append(time_Intervals_Found)
+    
+        # Returning the array/list
+        return self.time_Intervals
+    
+
+    # This is function for returning the indivdual times 
+    # from the time intervals.
+    def get_individual_times(self):
+
+        # Raising an error to make sure that 
+        # individual times is intilized first     
+        if not self.individual_Times:
+            raise ValueError("This is an empty array. Please initialize it before calling get_individual_times method")
+
+        # This will continue to execute the rest of the function as normal
+        try:
+            # Calling the time extractor to get the time intervals
+            times_found = timeExtractor.extract_time_ranges(self.content)
+
+            # A for loop to iterate through the time intervals
+            for time_interval in times_found:
+                parts = time_interval.split('-')
+                self.individual_Times.extend(part.strip() for part in parts)
+
+            return self.individual_Times
+        
+        # Prints the error to the person who's coding with this class
+        except ValueError as e:
+            print("Error:", str(e))
+
+    def get_Keyword(self):
         return self.keyword
     
-    def getKeywords(self):
+    def get_Keywords(self):
         return self.keywords
     
     #This function is used to print the content
