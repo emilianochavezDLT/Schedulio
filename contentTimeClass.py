@@ -1,6 +1,10 @@
 #This is the content and time class for the Schedulio program
 #This class is used to store the content and time of the schedule
 
+#importing the time extractor so we can use that logic in our class
+import timeExtractor
+
+
 #This class is used to store the content and it is also the parent class of the time class
 class FileContent:
 
@@ -22,6 +26,8 @@ class FileContent:
 
     #This function is used to add a time interval to the timeIntervals list
     def addTimeInterval(self, timeInterval):
+        
+
         self.timeIntervals.append(timeInterval)
     
     #This function is used to add a keyword to the keywords list
