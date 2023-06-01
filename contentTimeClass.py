@@ -64,7 +64,7 @@ class File_Content:
 
             # A for loop to iterate through the time intervals
             for time_interval in times_found:
-                parts = time_interval.split('-')
+                parts = time_interval.split(' - ')
                 self.individual_Times.extend(part.strip() for part in parts)
 
             return self.individual_Times
