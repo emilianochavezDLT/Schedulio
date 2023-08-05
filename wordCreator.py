@@ -5,6 +5,18 @@ import string
 from docx import Document
 from fpdf import FPDF
 from datetime import datetime, timedelta
+import tkinter as tk
+from tkinter import filedialog
+import os
+
+
+print("Welcome to the File Generator Program!")
+print("Press (m) for mac or (w) for everything else")
+userOS = input("What is your operating system? \n")
+
+#You stopped at the food functions to fix the time issue with macs
+
+
 
 # Random Word Generator #
 
@@ -95,10 +107,6 @@ def extreme_Case(currentTime, extreme_CaseTime):
 
 
 
-
-
-
-
 # Pattern Generator for times #
 def generate_Time_Pattern(keyword, timeInbetween):
     #This is the string that will be returned
@@ -169,11 +177,17 @@ def breakfast(hasATimeGenerated, timeGenerated):
         if randomNum == 0:
             #Adding 30 minutes to the time object
             time_obj += timedelta(minutes=30)
-            time_obj = datetime.strptime(extreme_Case(time_obj.strftime('%#I:%M %p'), "10:00 AM"), '%I:%M %p')
+            if userOS == "m":
+                time_obj = datetime.strptime(extreme_Case(time_obj.strftime('%-I:%M %p'), "10:00 AM"), '%I:%M %p')
+            else:
+                time_obj = datetime.strptime(extreme_Case(time_obj.strftime('%#I:%M %p'), "10:00 AM"), '%I:%M %p')
         else:
             #Adding 1 hour to the time object
             time_obj += timedelta(hours=1)
-            time_obj = datetime.strptime(extreme_Case(time_obj.strftime('%#I:%M %p'), "10:00 AM"), '%I:%M %p')
+            if userOS == "m": 
+                time_obj = datetime.strptime(extreme_Case(time_obj.strftime('%-I:%M %p'), "10:00 AM"), '%I:%M %p')
+            else:
+                time_obj = datetime.strptime(extreme_Case(time_obj.strftime('%#I:%M %p'), "10:00 AM"), '%I:%M %p')
         
         #Converting the time back to a string
         randomTime = time_obj.strftime('%#I:%M %p')
@@ -211,11 +225,17 @@ def lunch(hasATimeGenerated, timeGenerated):
         if randomNum == 0:
             #Adding 30 minutes to the time object
             time_obj += timedelta(minutes=30)
-            time_obj = datetime.strptime(extreme_Case(time_obj.strftime('%#I:%M %p'), "3:00 PM"), '%I:%M %p')
+            if userOS == "m":
+                time_obj = datetime.strptime(extreme_Case(time_obj.strftime('%-I:%M %p'), "3:00 PM"), '%I:%M %p')
+            else:
+                time_obj = datetime.strptime(extreme_Case(time_obj.strftime('%#I:%M %p'), "3:00 PM"), '%I:%M %p')
         else:
             #Adding 1 hour to the time object
             time_obj += timedelta(hours=1)
-            time_obj = datetime.strptime(extreme_Case(time_obj.strftime('%#I:%M %p'), "3:00 PM"), '%I:%M %p')
+            if userOS == "m":
+                time_obj = datetime.strptime(extreme_Case(time_obj.strftime('%-I:%M %p'), "3:00 PM"), '%I:%M %p')
+            else:
+                time_obj = datetime.strptime(extreme_Case(time_obj.strftime('%#I:%M %p'), "3:00 PM"), '%I:%M %p')
         
         am_pm = "AM"
 
@@ -368,26 +388,27 @@ def break_Time(has_A_Time_Been_Generated, time_Generated):
 ####This is the File Creator####
 
 #Save to text file
-def save_to_text(content, filename):
+def save_to_text(content, filename, extension):
 
-    with open(filename, "w") as file:
+    path = os.path.join(extension,filename)
+    with open(path, "w") as file:
         file.write(content)
 
 #Save to docx file
-def save_to_docx(content, filename):
+def save_to_docx(content, filename, extension):
     
         document = Document()
         document.add_paragraph(content)
-        document.save(filename)
+        document.save(os.path.join(extension,filename))
 
 #Save to pdf file
-def save_to_pdf(content, filename):
+def save_to_pdf(content, filename, extension):
 
             pdf = FPDF()
             pdf.add_page()
             pdf.set_font("Arial", size = 12)
             pdf.multi_cell(0, 10, txt = content, align = "L")
-            pdf.output(filename)
+            pdf.output(os.path.join(extension,filename))
 
 
 ##################################
@@ -448,7 +469,7 @@ def file_Content_Generator(keyword, output_Length):
     return file_Output
 
 
-def file_Generator(keyword, number_Of_File, content):
+def file_Generator(keyword, number_Of_File, content, directory):
     
     #This is the name of the file that will be created
     filename = keyword + str(number_Of_File)
@@ -466,17 +487,38 @@ def file_Generator(keyword, number_Of_File, content):
      
     #This is the content that will be saved to the file
     #This is the function that will save the content to the file
-    save_to_text(content, filenameText)
+    save_to_text(content, filenameText, directory)
 
     ##This is the function that will save the content to the file
-    save_to_docx(content, filenameDocx)
+    save_to_docx(content, filenameDocx, directory)
     
     ##This is the function that will save the content to the file
-    save_to_pdf(content, filenamePdf)     
+    save_to_pdf(content, filenamePdf, directory)     
+
+
+def prompt_directory():
+    
+    validDirectory = False
+    while validDirectory == False:
+        try:
+            root = tk.Tk()
+            #Hides the root window
+            root.withdraw()
+            #This is the directory that will be used
+            directory = filedialog.askdirectory()
+            validDirectory = True
+        except:
+            print("There was an error with the directory! Check if the directory is valid, or not empty")
+            directory = ""
+    
+    return directory
 
 
 #This is the main function of the program
 def main():
+
+   
+
 
     keywords = ['Breakfast', 'Lunch', 'Dinner', 'Break']
     
@@ -486,7 +528,12 @@ def main():
     #This is the length of the output
     output_Length = 10
 
-   #Creating a for loop to generate the content for the files and to generate the files
+    #This is the directory that will be used
+    directory = prompt_directory()
+
+
+
+    #Creating a for loop to generate the content for the files and to generate the files
     for i in range(num_of_Files):
 
         #Creating a loop to generate the content for the files
@@ -496,7 +543,7 @@ def main():
             file_Content = file_Content_Generator(keywords[j], output_Length)
             
             #This is the function that will generate the files
-            file_Generator(keywords[j], i, file_Content)
+            file_Generator(keywords[j], i, file_Content, directory)
 
             #This is the string that will hold the random words, string, and numbers
             print("This is the file content that was generated \n", file_Content)
