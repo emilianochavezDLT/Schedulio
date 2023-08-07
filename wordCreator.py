@@ -11,10 +11,14 @@ import os
 
 
 print("Welcome to the File Generator Program!")
-print("Press (m) for mac or (w) for everything else")
+print("Press (m) for mac/linux or (w) for everything else")
 userOS = input("What is your operating system? \n")
 
-#You stopped at the food functions to fix the time issue with macs
+ #This is the string that will determine the time format
+if userOS == "w":
+    time_format = '%#I:%M '
+else:  # for macOS and Linux
+    time_format = '%-I:%M '
 
 
 
@@ -82,28 +86,44 @@ def extreme_Case(currentTime, extreme_CaseTime):
     # This is the string that will be returned
     correctedTime = ""
 
+
     # Converting the time to a time object
-    time_obj = datetime.strptime(currentTime, '%I:%M %p')
+    time_obj = datetime.strptime(currentTime, '%I:%M ')
     # Extracting the hour and minute components
     current_hour = time_obj.hour
     current_minute = time_obj.minute
 
     # Converting the extreme case time to a time object
-    extreme_obj = datetime.strptime(extreme_CaseTime, '%I:%M %p')
+    extreme_obj = datetime.strptime(extreme_CaseTime, '%I:%M ')
     # Extracting the hour component
     extreme_hour = extreme_obj.hour
 
     # Comparing the hour and minute components
     if current_hour >= extreme_hour:
         # Converting the extreme case time back to a string
-        correctedTime = datetime.strptime(extreme_CaseTime, '%I:%M %p').strftime('%#I:%M %p')
+        correctedTime = datetime.strptime(extreme_CaseTime, '%I:%M ').strftime(time_format)
         
     else:
         # Converting the time back to a string
-        correctedTime = time_obj.strftime('%#I:%M %p')
+        correctedTime = time_obj.strftime(time_format)
     
 
     return correctedTime
+
+#This is to the add another time interval to the current time
+def addition_Time(timeObject, randomNum, extremeCaseTime):
+
+    if randomNum == 0:
+        timeObject += timedelta(minutes=30)
+        timeObject = datetime.strptime(extreme_Case(timeObject.strftime(time_format), extremeCaseTime), '%I:%M ')
+    
+    else:
+        timeObject += timedelta(hours=1)
+        timeObject =  datetime.strptime(extreme_Case(timeObject.strftime(time_format), extremeCaseTime), '%I:%M ')
+    
+    return timeObject
+
+
 
 
 
@@ -172,26 +192,15 @@ def breakfast(hasATimeGenerated, timeGenerated):
         
         #We are going to add another if statment saying if the time
         # equals to 3:30pm then that will the latest time it can be 
-        # and if it is 3:30pm then we will not add any more time to it
-        
-        if randomNum == 0:
-            #Adding 30 minutes to the time object
-            time_obj += timedelta(minutes=30)
-            if userOS == "m":
-                time_obj = datetime.strptime(extreme_Case(time_obj.strftime('%-I:%M %p'), "10:00 AM"), '%I:%M %p')
-            else:
-                time_obj = datetime.strptime(extreme_Case(time_obj.strftime('%#I:%M %p'), "10:00 AM"), '%I:%M %p')
-        else:
-            #Adding 1 hour to the time object
-            time_obj += timedelta(hours=1)
-            if userOS == "m": 
-                time_obj = datetime.strptime(extreme_Case(time_obj.strftime('%-I:%M %p'), "10:00 AM"), '%I:%M %p')
-            else:
-                time_obj = datetime.strptime(extreme_Case(time_obj.strftime('%#I:%M %p'), "10:00 AM"), '%I:%M %p')
-        
-        #Converting the time back to a string
-        randomTime = time_obj.strftime('%#I:%M %p')
+        # and if it is 3:30pm then we will not add any more time to it        
+        #Extreme case time is 10:00 AM
+        extremeCaseTime = "10:00 "
 
+        #Adding the time to the time object
+        time_obj = addition_Time(time_obj, randomNum, extremeCaseTime)
+
+        #Converting the time back to a string
+        randomTime = time_obj.strftime(time_format) + "AM"
 
     else:
         #Generating the random hour and minute
@@ -214,6 +223,7 @@ def lunch(hasATimeGenerated, timeGenerated):
     if hasATimeGenerated == True:
         #Converting the time to a time object
         time_obj = datetime.strptime(timeGenerated, '%I:%M %p')
+        
         #Creating a random number generater. If the time is even then we add 30 minutes
         #If the time is odd then we add 1hour
         randomNum = random.randint(0, 1)
@@ -221,27 +231,17 @@ def lunch(hasATimeGenerated, timeGenerated):
         #We are going to add another if statment saying if the time
         # equals to 3:30pm then that will the latest time it can be 
         # and if it is 3:30pm then we will not add any more time to it
+        #Extreme case time is 3:00 PM  
+        extremeCaseTime = "3:00 "
+
+        #Adding the time to the time object
+        time_obj = addition_Time(time_obj, randomNum, extremeCaseTime)
         
-        if randomNum == 0:
-            #Adding 30 minutes to the time object
-            time_obj += timedelta(minutes=30)
-            if userOS == "m":
-                time_obj = datetime.strptime(extreme_Case(time_obj.strftime('%-I:%M %p'), "3:00 PM"), '%I:%M %p')
-            else:
-                time_obj = datetime.strptime(extreme_Case(time_obj.strftime('%#I:%M %p'), "3:00 PM"), '%I:%M %p')
-        else:
-            #Adding 1 hour to the time object
-            time_obj += timedelta(hours=1)
-            if userOS == "m":
-                time_obj = datetime.strptime(extreme_Case(time_obj.strftime('%-I:%M %p'), "3:00 PM"), '%I:%M %p')
-            else:
-                time_obj = datetime.strptime(extreme_Case(time_obj.strftime('%#I:%M %p'), "3:00 PM"), '%I:%M %p')
-        
+        #Defining the am/pm. Default is AM
         am_pm = "AM"
 
-        
         #Checking if the hour is greater than 12
-        if time_obj.hour >= 12:
+        if (time_obj.hour == 12 or time_obj.hour == 1 or time_obj.hour == 2 or time_obj.hour == 3):
             #Subtracting 12 from the hour
             time_obj = time_obj.replace(hour=time_obj.hour - 12)
             #Setting the am/pm to pm
@@ -249,7 +249,7 @@ def lunch(hasATimeGenerated, timeGenerated):
         
 
         #Converting the time object back to a string
-        randomTime = time_obj.strftime('%#I:%M ') + am_pm
+        randomTime = time_obj.strftime(time_format) + am_pm
     
     #If a time has not been generated then we generate a random time
     else:
@@ -283,27 +283,24 @@ def dinner(hasATimeGenerated, timeGenerated):
         # We are going to add another if statement saying if the time
         # equals 3:30pm then that will be the latest time it can be
         # and if it is 3:30pm then we will not add any more time to it
-        if randomNum == 0:
-            # Adding 30 minutes to the time object
-            time_obj += timedelta(minutes=30)
-            # Converting the time object back to a string, but it will return
-            # the correct time if the time is greater than 3:30pm
-            time_obj = datetime.strptime(extreme_Case(time_obj.strftime('%#I:%M %p'), "3:00 AM"), '%I:%M %p')
-        else:
-            # Adding 1 hour to the time object
-            time_obj += timedelta(hours=1)
-            time_obj = datetime.strptime(extreme_Case(time_obj.strftime('%#I:%M %p'), "3:00 AM"), '%I:%M %p')
+        # Extreme case time is 3:00 AM
+        extremeCaseTime = "3:00 "
 
+        # Adding the time to the time object
+        time_obj = addition_Time(time_obj, randomNum, extremeCaseTime)
+        
+        # Defining the am/pm. Default is AM
         am_pm = "AM"
+
         # Checking if the hour is greater than 12
-        if time_obj.hour > 12:
+        if (time_obj.hour > 12):
             # Subtracting 12 from the hour
             time_obj = time_obj.replace(hour=time_obj.hour - 12)
             # Setting the am/pm to pm
             am_pm = "PM"
 
         # Converting the time object back to a string
-        randomTime = time_obj.strftime('%#I:%M ') + am_pm
+        randomTime = time_obj.strftime(time_format) + am_pm
 
     else:
         # We are going to assume that hour is not 4
@@ -342,16 +339,14 @@ def break_Time(has_A_Time_Been_Generated, time_Generated):
         #We are going to add another if statment saying if the time
         # equals to 3:30pm then that will the latest time it can be 
         # and if it is 3:30pm then we will not add any more time to it
-        
-        if randomNum == 0:
-            #Adding 30 minutes to the time object
-            time_obj += timedelta(minutes=30)
-            time_obj = datetime.strptime(extreme_Case(time_obj.strftime('%#I:%M %p'), "7:00 PM"), '%I:%M %p')
-        else:
-            #Adding 1 hour to the time object
-            time_obj += timedelta(hours=1)
-            time_obj = datetime.strptime(extreme_Case(time_obj.strftime('%#I:%M %p'), "7:00 PM"), '%I:%M %p')
-        
+        #Extreme case time is 7:00 PM
+        extremeCaseTime = "7:00 "
+
+
+        #Adding the time to the time object
+        time_obj = addition_Time(time_obj, randomNum, extremeCaseTime)
+
+        #Defining the am/pm. Default is AM
         am_pm = "AM"
          #Checking if the hour is greater than 12
         if time_obj.hour >= 12:
@@ -362,7 +357,7 @@ def break_Time(has_A_Time_Been_Generated, time_Generated):
         
 
         #Converting the time object back to a string
-        randomTime = time_obj.strftime('%#I:%M ') + am_pm
+        randomTime = time_obj.strftime(time_format) + am_pm
     
     #If a time has not been generated then we generate a random time
     else:
@@ -381,7 +376,6 @@ def break_Time(has_A_Time_Been_Generated, time_Generated):
             randomTime = randomHour + ":" + randomMinute + " " + "PM"
     ##This is the string that will be returned
     return randomTime
-
 
 
 
@@ -490,10 +484,10 @@ def file_Generator(keyword, number_Of_File, content, directory):
     save_to_text(content, filenameText, directory)
 
     ##This is the function that will save the content to the file
-    save_to_docx(content, filenameDocx, directory)
+   # save_to_docx(content, filenameDocx, directory)
     
     ##This is the function that will save the content to the file
-    save_to_pdf(content, filenamePdf, directory)     
+    #save_to_pdf(content, filenamePdf, directory)     
 
 
 def prompt_directory():
@@ -523,7 +517,7 @@ def main():
     keywords = ['Breakfast', 'Lunch', 'Dinner', 'Break']
     
     #This is the number of files that will be generated
-    num_of_Files = 10
+    num_of_Files = 3
 
     #This is the length of the output
     output_Length = 10
