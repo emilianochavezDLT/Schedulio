@@ -7,6 +7,15 @@
 
 
 
+def skeleton():
+
+    #This is a skeleton for the program, it will be used to create the main program
+    #This is a test to see if the program is running
+    print("Hello World")
+
+def addToSchedule(employee, event):
+
+def removeFromSchedule(employee, event):
 
 
 #This is the main function of the program
