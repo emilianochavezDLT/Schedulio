@@ -1,6 +1,5 @@
-
-import Employee
-import Suggestion
+from Employee import *
+# import Suggestion
 from Functions import *
 
 running = True
