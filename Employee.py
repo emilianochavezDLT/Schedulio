@@ -47,9 +47,9 @@ class Employee:
             end_time = self.days[day].getEnd()
             
             if (day == 0 or day == 4):
-                print(day_name + ":\t\t" + start_time+"-"+end_time)
+                print(day_name + ":\t\t" + str(start_time)+"-"+str(end_time))
             else:
-                print(day_name + ":\t" + start_time+"-"+end_time)
+                print(day_name + ":\t" + str(start_time)+"-"+str(end_time))
 
 
         def setAvailability(self, i, start, end):
@@ -97,11 +97,11 @@ class Employee:
     def setStatus(self, status):
         self.status = status
 
-Emiliano = Employee("Eminiano", 5, "full")
+#Emiliano = Employee("Eminiano", 5, "full")
 
 
-Emiliano.setAvail()
-Emiliano.getAvail()
+#Emiliano.setAvail()
+#Emiliano.getAvail()
 
 
 
