@@ -97,11 +97,11 @@ class Employee:
     def setStatus(self, status):
         self.status = status
 
-Emiliano = Employee("Eminiano", 5, "full")
+Emiliano = Employee("Emiliano", 5, "full")
 
 
-Emiliano.setAvail()
-Emiliano.getAvail()
+#Emiliano.setAvail()
+#Emiliano.getAvail()
 
 
 
